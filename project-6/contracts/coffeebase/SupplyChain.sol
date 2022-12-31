@@ -158,10 +158,15 @@ contract SupplyChain {
   function harvestItem(uint _upc, address _originFarmerID, string memory _originFarmName, string memory _originFarmInformation, string  memory _originFarmLatitude, string memory _originFarmLongitude, string memory _productNotes) public
   {
     // Add the new item as part of Harvest
-    
+    uint productId = _upc + sku;
+    items[_upc] = Item(sku, _upc, msg.sender, _originFarmerID, _originFarmName,
+        _originFarmInformation, _originFarmLatitude, _originFarmLongitude, productId,
+        _productNotes, 0, State.Harvested, address(0), address(0), address(0));
+
     // Increment sku
     sku = sku + 1;
     // Emit the appropriate event
+    emit Harvested(_upc);
     
   }
 
@@ -278,7 +283,19 @@ contract SupplyChain {
   ) 
   {
   // Assign values to the 8 parameters
+  Item memory foundItem = items[_upc];
+
+  // Check that a valid item exists with this UPC
+  require(foundItem.upc != 0);
   
+  itemSKU = foundItem.sku;
+  itemUPC = foundItem.upc;
+  ownerID = foundItem.ownerID;
+  originFarmerID = foundItem.originFarmerID;
+  originFarmName = foundItem.originFarmName;
+  originFarmInformation = foundItem.originFarmInformation;
+  originFarmLatitude = foundItem.originFarmLatitude;
+  originFarmLongitude = foundItem.originFarmLongitude;
     
   return 
   (
