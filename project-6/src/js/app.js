@@ -60,9 +60,13 @@ App = {
         /// Modern dapp browsers...
         if (window.ethereum) {
             App.web3Provider = window.ethereum;
+            console.log("Connecting via a modern dapp browser...")
             try {
                 // Request account access
-                await window.ethereum.enable();
+                await ethereum.request({
+                    method: 'eth_requestAccounts',
+                  });
+
             } catch (error) {
                 // User denied account access...
                 console.error("User denied account access")
@@ -70,10 +74,12 @@ App = {
         }
         // Legacy dapp browsers...
         else if (window.web3) {
+            console.log("Legacy dapp browsers");
             App.web3Provider = window.web3.currentProvider;
         }
         // If no injected web3 instance is detected, fall back to Ganache
         else {
+            console.log("Attempting to connect directly to Ganache server");
             App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
         }
 
@@ -107,7 +113,6 @@ App = {
             var SupplyChainArtifact = data;
             App.contracts.SupplyChain = TruffleContract(SupplyChainArtifact);
             App.contracts.SupplyChain.setProvider(App.web3Provider);
-            
             App.fetchItemBufferOne();
             App.fetchItemBufferTwo();
             App.fetchEvents();
@@ -175,13 +180,13 @@ App = {
                 App.originFarmInformation, 
                 App.originFarmLatitude, 
                 App.originFarmLongitude, 
-                App.productNotes
-            );
+                App.productNotes,
+                {from: App.metamaskAccountID});
         }).then(function(result) {
             $("#ftc-item").text(result);
             console.log('harvestItem',result);
         }).catch(function(err) {
-            console.log(err.message);
+            console.error(err.message);
         });
     },
 
@@ -218,7 +223,7 @@ App = {
         var processId = parseInt($(event.target).data('id'));
 
         App.contracts.SupplyChain.deployed().then(function(instance) {
-            const productPrice = web3.toWei(1, "ether");
+            const productPrice = web3.utils.toWei("1", "ether");
             console.log('productPrice',productPrice);
             return instance.sellItem(App.upc, App.productPrice, {from: App.metamaskAccountID});
         }).then(function(result) {
@@ -234,7 +239,7 @@ App = {
         var processId = parseInt($(event.target).data('id'));
 
         App.contracts.SupplyChain.deployed().then(function(instance) {
-            const walletValue = web3.toWei(3, "ether");
+            const walletValue = web3.utils.toWei("3", "ether");
             return instance.buyItem(App.upc, {from: App.metamaskAccountID, value: walletValue});
         }).then(function(result) {
             $("#ftc-item").text(result);
@@ -298,7 +303,7 @@ App = {
           $("#ftc-item").text(result);
           console.log('fetchItemBufferOne', result);
         }).catch(function(err) {
-          console.log(err.message);
+          console.error(err.message);
         });
     },
 
