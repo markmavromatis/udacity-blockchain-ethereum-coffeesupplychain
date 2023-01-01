@@ -100,6 +100,8 @@ to make the web faster, safer, and more open.
 * [Truffle Framework](http://truffleframework.com/) - Truffle is the most popular development framework for Ethereum with a mission to make your life a whole lot easier.
 
 
+
+
 ## Authors
 
 See also the list of [contributors](https://github.com/your/project/contributors.md) who participated in this project.
@@ -110,3 +112,30 @@ See also the list of [contributors](https://github.com/your/project/contributors
 * Ganache-cli
 * Truffle
 * IPFS
+
+
+## Project Notes
+
+This project implements a coffee beans supply chain project built as a decentralized app on the ethereum blockchain. It tracks the lifecycle of a harvested coffee bean from the farm to the consumer's shopping bag using a smart contract!
+
+1. As the coffee bean is harvested, a farmer registers the bean on the blockchain with the source farm details.
+2. The farmer marks the bean as "processed"
+3. The farmer packs the bean in preparation for shipping to a distributor.
+4. The farmer marks the bean for sale
+5. A distributor buys the bean.
+6. The farmer ships the bean to the associated retailer.
+7. A consumer purchases the bean.
+
+### Deployment notes
+
+This contract has been deployed to the Goerli ethereum testnet blockchain.
+
+- Contract creation transaction hash: 0xbc00bb642e1e86876f2458c5c83861b1a73622448f27f425cc6524242e71cf13
+- Contract address: 0xc187ccbE0D6D2e99E2ef6B1f888843574FF79De3
+
+### Additional libraries
+
+My project code adds two node modules:
+- truffle-assertions: Detects events while running smart contract unit tests.
+- truffle-hdwallet-provider: Integrates Truffle with Goerli testnet network
+
